@@ -3,7 +3,10 @@ name = "ragtest"
 version = "0.1.0"
 requires-python = ">=3.11"
 dependencies = [
+    "alembic>=1.20.0",
     "httpx>=0.28.1",
     "numpy>=2.4.6",
+    "psycopg[binary]>=3.3.6",
     "sentence-transformers>=6.1.0",
+    "sqlalchemy>=2.1.1",
 ]
