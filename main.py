@@ -5,9 +5,11 @@ from rag.embeddings import load_embedding_model, embed_chunks, embed_query
 from rag.retrieval import retrieve_chunks
 from rag.llm import ask_llm
 from rag.context import build_context
+from rag.database import check_connection
 
 
 def main() -> None:
+    check_connection()
 
     sentences = split_into_sentences(
         DOCUMENT_TEXT
