@@ -1,8 +1,14 @@
 from sqlalchemy import create_engine, text
-from rag.config import DATABASE_URL
+from sqlalchemy.orm import sessionmaker
+from app.core.config import DATABASE_URL
 
 
 engine = create_engine(DATABASE_URL, echo=True)
+
+SessionLocal = sessionmaker(
+    bind=engine,
+    expire_on_commit=False,
+)
 
 def check_connection() -> None:
     """

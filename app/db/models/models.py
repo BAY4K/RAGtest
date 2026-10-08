@@ -18,6 +18,9 @@ class Document(Base):
         Text,
         nullable=False
     )
+    chunks: Mapped[list["Chunk"]] = relationship(
+        back_populates="document",
+    )
 
 
 class Chunk(Base):

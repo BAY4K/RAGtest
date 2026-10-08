@@ -1,11 +1,12 @@
-from rag.config import TOP_K, embedding_model
-from rag.sample_data import DOCUMENT_TEXT
-from rag.chuncking import split_into_sentences, create_chunks
-from rag.embeddings import load_embedding_model, embed_chunks, embed_query
-from rag.retrieval import retrieve_chunks
-from rag.llm import ask_llm
-from rag.context import build_context
-from rag.database import check_connection
+from app.core.config import TOP_K, embedding_model
+from app.rag import DOCUMENT_TEXT
+from app.rag import split_into_sentences, create_chunks
+from app.rag.embeddings import load_embedding_model, embed_chunks, embed_query
+from app.rag import retrieve_chunks
+from app.rag import ask_llm
+from app.rag import build_context
+from app.rag import check_connection
+from app.rag import save_document, get_document, get_document_chunks
 
 
 def main() -> None:
@@ -22,10 +23,28 @@ def main() -> None:
         overlap_sentences=1,
     )
 
-
-    print(
-        f'Создано chunks: {len(chunks)}'
+    document_id = save_document(
+        title="Текстовый документ",
+        chunks=chunks,
     )
+
+    print(f'Документ сохранён, id = : {document_id}')
+
+    document = get_document(document_id)
+
+    print("\nДокумент:")
+    print(document.id, document.title)
+
+    saved_chunks = get_document_chunks(document_id)
+
+    print("\nЧанки из PostgreSQL:")
+
+    for chunk in saved_chunks:
+        print(
+            chunk.id,
+            chunk.chunk_number,
+            chunk.content,
+        )
 
     model = load_embedding_model(embedding_model)
 
