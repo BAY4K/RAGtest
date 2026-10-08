@@ -1,27 +1,12 @@
+from typing import TYPE_CHECKING
+
 from sqlalchemy import BigInteger, ForeignKey, Identity, Integer, Text
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+from app.db.base import Base
 
-class Base(DeclarativeBase):
-    pass
-
-
-class Document(Base):
-    __tablename__ = "documents"
-
-    id: Mapped[int] = mapped_column(
-        BigInteger,
-        Identity(),
-        primary_key=True
-    )
-    title: Mapped[str] = mapped_column(
-        Text,
-        nullable=False
-    )
-    chunks: Mapped[list["Chunk"]] = relationship(
-        back_populates="document",
-    )
-
+if TYPE_CHECKING:
+    from app.db.models.document import Document
 
 class Chunk(Base):
     __tablename__ = "chunks"

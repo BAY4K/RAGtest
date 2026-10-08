@@ -1,12 +1,12 @@
 from app.core.config import TOP_K, embedding_model
-from app.rag import DOCUMENT_TEXT
-from app.rag import split_into_sentences, create_chunks
+from app.rag.sample_data import DOCUMENT_TEXT
+from app.rag.chunking import split_into_sentences, create_chunks
 from app.rag.embeddings import load_embedding_model, embed_chunks, embed_query
-from app.rag import retrieve_chunks
-from app.rag import ask_llm
-from app.rag import build_context
-from app.rag import check_connection
-from app.rag import save_document, get_document, get_document_chunks
+from app.rag.retrieval import retrieve_chunks
+from app.llm.client import ask_llm
+from app.rag.context import build_context
+from app.db.session import check_connection
+from app.db.services.document import save_document, get_document, get_document_chunks
 
 
 def main() -> None:

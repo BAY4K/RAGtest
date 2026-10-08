@@ -1,7 +1,7 @@
 from sqlalchemy import select
 
-from app.db.database import SessionLocal
-from app.db.models.models import Chunk, Document
+from app.db.session import SessionLocal
+from app.db.models import Chunk, Document
 
 def save_document(
         title: str,
