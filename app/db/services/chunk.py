@@ -6,14 +6,15 @@ from app.db.session import SessionLocal
 
 def search_similar_chunks(
         query_embedding: list[float],
-        top_k: int
-) -> list[tuple[Chunk, float]]:
+        top_k: int = 3
+) -> list[tuple[int, str, float]]:
     with SessionLocal() as session:
         distance = Chunk.embedding.cosine_distance(query_embedding)
 
         statement = (
             select(
-                Chunk,
+                Chunk.chunk_number,
+                Chunk.content,
                 distance.label("distance"),
             )
             .where(Chunk.embedding.is_not(None))
@@ -25,9 +26,10 @@ def search_similar_chunks(
 
         return [
             (
-                chunk,
+                chunk_number,
+                content,
                 1.0 - float(distance_value)
             )
-            for chunk, distance_value in rows
+            for chunk_number, content, distance_value in rows
         ]
 

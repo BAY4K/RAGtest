@@ -2,11 +2,10 @@ from app.core.config import TOP_K, EMBEDDING_MODEL
 from app.rag.sample_data import DOCUMENT_TEXT
 from app.rag.chunking import split_into_sentences, create_chunks
 from app.rag.embeddings import load_embedding_model, embed_chunks, embed_query
-from app.rag.retrieval import retrieve_chunks
 from app.llm.client import ask_llm
 from app.rag.context import build_context
 from app.db.session import check_connection
-from app.db.services.document import save_document, get_document, get_document_chunks
+from app.db.services import save_document, search_similar_chunks
 
 
 def main() -> None:
@@ -25,15 +24,15 @@ def main() -> None:
 
     model = load_embedding_model(EMBEDDING_MODEL)
 
-    chunk_vectors = embed_chunks(model, chunks)
-
-    created_embeddings = chunk_vectors.tolist()
-
-    document_id = save_document(
-        title="Текстовый документ",
-        chunks=chunks,
-        embeddings=created_embeddings,
-    )
+    # chunk_vectors = embed_chunks(model, chunks)
+    #
+    # created_embeddings = chunk_vectors.tolist()
+    #
+    # document_id = save_document(
+    #     title="Текстовый документ",
+    #     chunks=chunks,
+    #     embeddings=created_embeddings,
+    # )
 
     print()
 
@@ -48,11 +47,9 @@ def main() -> None:
 
     query_vector = embed_query(model, question)
 
-    retrieved = retrieve_chunks(
-        query_vector=query_vector,
-        chunks=chunks,
-        chunk_vectors=chunk_vectors,
-        top_k=TOP_K,
+    retrieved = search_similar_chunks(
+        query_vector.tolist(),
+        TOP_K
     )
 
     print()
