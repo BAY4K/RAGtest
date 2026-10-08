@@ -3,7 +3,9 @@ import os
 
 TOP_K = 3
 
-embedding_model = 'intfloat/multilingual-e5-base'
+EMBEDDING_MODEL = 'intfloat/multilingual-e5-base'
+
+EMBEDDING_DIM = 768
 
 OLLAMA_URL = os.getenv(
     "OLLAMA_URL",

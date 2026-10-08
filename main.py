@@ -1,4 +1,4 @@
-from app.core.config import TOP_K, embedding_model
+from app.core.config import TOP_K, EMBEDDING_MODEL
 from app.rag.sample_data import DOCUMENT_TEXT
 from app.rag.chunking import split_into_sentences, create_chunks
 from app.rag.embeddings import load_embedding_model, embed_chunks, embed_query
@@ -23,32 +23,17 @@ def main() -> None:
         overlap_sentences=1,
     )
 
+    model = load_embedding_model(EMBEDDING_MODEL)
+
+    chunk_vectors = embed_chunks(model, chunks)
+
+    created_embeddings = chunk_vectors.tolist()
+
     document_id = save_document(
         title="Текстовый документ",
         chunks=chunks,
+        embeddings=created_embeddings,
     )
-
-    print(f'Документ сохранён, id = : {document_id}')
-
-    document = get_document(document_id)
-
-    print("\nДокумент:")
-    print(document.id, document.title)
-
-    saved_chunks = get_document_chunks(document_id)
-
-    print("\nЧанки из PostgreSQL:")
-
-    for chunk in saved_chunks:
-        print(
-            chunk.id,
-            chunk.chunk_number,
-            chunk.content,
-        )
-
-    model = load_embedding_model(embedding_model)
-
-    chunk_vectors = embed_chunks(model, chunks)
 
     print()
 

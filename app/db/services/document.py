@@ -6,18 +6,25 @@ from app.db.models import Chunk, Document
 def save_document(
         title: str,
         chunks: list[str],
+        embeddings: list[list[float]],
 ) -> int:
-    with SessionLocal.begin() as session:
-        document = Document(
-            title=title,
+    if len(chunks) != len(embeddings):
+        raise ValueError(
+            "Количество chunks и embeddings должно совпадать."
         )
+
+    with SessionLocal.begin() as session:
+        document = Document(title=title)
         session.add(document)
         session.flush()
-        for chunk_number, content in enumerate(chunks):
+
+        for chunk_number, (content, embedding) in enumerate(
+                zip(chunks, embeddings, strict=True)):
             chunk = Chunk(
                 document_id=document.id,
                 chunk_number=chunk_number,
                 content=content,
+                embedding=embedding,
             )
             session.add(chunk)
 

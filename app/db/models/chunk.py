@@ -2,7 +2,9 @@ from typing import TYPE_CHECKING
 
 from sqlalchemy import BigInteger, ForeignKey, Identity, Integer, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from pgvector.sqlalchemy import VECTOR
 
+from app.core.config import EMBEDDING_DIM
 from app.db.base import Base
 
 if TYPE_CHECKING:
@@ -30,6 +32,11 @@ class Chunk(Base):
     content: Mapped[str] = mapped_column(
         Text,
         nullable=False
+    )
+
+    embedding:Mapped[list[float] | None] = mapped_column(
+        VECTOR(EMBEDDING_DIM),
+        nullable=True
     )
 
     document: Mapped["Document"] = relationship(
